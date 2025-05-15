@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Liste des concerts</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Concerts à venir</h1>
+
+<p th:if="${user != null}">
+    Bonjour <strong th:text="${user.username}">Utilisateur</strong> !
+    <a th:href="@{/logout}">Déconnexion</a> |
+    <a th:href="@{/concerts/add}">Ajouter un concert</a>
+</p>
+
+<p th:if="${user == null}">
+    <a th:href="@{/login}">Connexion</a> |
+    <a th:href="@{/register}">Inscription</a>
+</p>
+
+<ul>
+    <li th:each="concert : ${concerts}">
+        <a th:href="@{/concerts/{id}(id=${concert.id})}">
+            <strong th:text="${concert.band}">Nom du groupe</strong>
+        </a>
+        – <span th:text="${concert.venue}">Lieu</span>,
+        le <span th:text="${concert.date}">Date</span>
+    </li>
+</ul>
+</body>
+</html>

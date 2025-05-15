@@ -24,4 +24,42 @@ public class Rating {
     private Concert concert;
 
     public Rating() {}
+
+    // === GETTERS & SETTERS ===
+
+    public Long getId() {
+        return id;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Concert getConcert() {
+        return concert;
+    }
+
+    public void setConcert(Concert concert) {
+        this.concert = concert;
+    }
 }

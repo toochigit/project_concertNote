@@ -25,4 +25,13 @@ public class ConcertService {
     public Optional<Concert> findById(Long id) {
         return concertRepository.findById(id);
     }
+
+    public Optional<Concert> findWithRatings(Long id) {
+        return concertRepository.findById(id); // les ratings sont déjà chargés grâce au mappedBy
+    }
+
+    public void deleteConcert(Concert concert) {
+        concertRepository.delete(concert);
+    }
+
 }

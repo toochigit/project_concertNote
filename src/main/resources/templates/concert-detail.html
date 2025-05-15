@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Détails du concert</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+<h1>Détails du concert</h1>
+
+<p th:if="${param.alreadyRated}" style="color: red;">
+  Vous avez déjà noté ce concert.
+</p>
+
+
+<p>
+  <strong th:text="${concert.band}">Nom du groupe</strong><br>
+  Lieu : <span th:text="${concert.venue}">Lieu</span><br>
+  Date : <span th:text="${concert.date}">Date</span>
+</p>
+
+<hr>
+
+<h2>Notes et commentaires</h2>
+
+<div th:if="${concert.ratings.size() > 0}">
+  <ul>
+    <li th:each="rating : ${concert.ratings}">
+      Note : <strong th:text="${rating.score}">5</strong>/5<br>
+      <span th:if="${rating.comment != null}" th:text="${rating.comment}">Commentaire</span><br>
+      <small>Par : <span th:text="${rating.user.username}">Nom</span></small>
+      <hr>
+    </li>
+  </ul>
+</div>
+<p th:if="${concert.ratings.size() == 0}">
+  Aucun avis pour l’instant.
+</p>
+
+<div th:if="${session.user != null}">
+  <a th:href="@{/ratings/add/{id}(id=${concert.id})}">Noter ce concert</a>
+
+  <a th:href="@{/concerts/edit/{id}(id=${concert.id})}">Modifier ce concert</a><br>
+
+  <form th:action="@{/concerts/delete/{id}(id=${concert.id})}" method="post" style="display:inline;">
+    <button type="submit" onclick="return confirm('Supprimer ce concert ?');">Supprimer</button>
+  </form>
+</div>
+
+<p><a th:href="@{/concerts}">← Retour à la liste</a></p>
+</body>
+</html>
