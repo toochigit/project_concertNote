@@ -1,26 +1,72 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Connexion - ConcertNote</title>
-    <meta charset="UTF-8">
+<head th:replace="fragments :: head('Connexion')">
 </head>
-<body>
-<h1>Connexion</h1>
+<body class="bg-light">
+<nav th:replace="fragments :: navbar"></nav>
 
-<form th:action="@{/login}" th:object="${loginDto}" method="post">
-    <label>Nom d'utilisateur :</label><br>
-    <input type="text" th:field="*{username}"><br>
-    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;"></p><br>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title h4 mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>Connexion
+                    </h2>
+                </div>
 
-    <label>Mot de passe :</label><br>
-    <input type="password" th:field="*{password}"><br>
-    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></p><br>
+                <div class="card-body p-4">
+                    <!-- Message d'erreur -->
+                    <div class="alert alert-danger" th:if="${param.error}">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Identifiants incorrects
+                    </div>
 
-    <button type="submit">Se connecter</button>
-</form>
+                    <!-- Message de déconnexion -->
+                    <div class="alert alert-success" th:if="${param.logout}">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Vous avez été déconnecté avec succès
+                    </div>
 
-<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+                    <form th:action="@{/login}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nom d'utilisateur</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" id="username" name="username"
+                                       placeholder="Votre nom d'utilisateur" required autofocus>
+                            </div>
+                        </div>
 
-<p>Pas encore inscrit ? <a th:href="@{/register}">Créer un compte</a></p>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="Votre mot de passe" required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer text-center py-3">
+                    <p class="mb-0">Pas encore de compte ?
+                        <a th:href="@{/register}" class="text-decoration-none">
+                            S'inscrire
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments :: footer"></footer>
 </body>
 </html>

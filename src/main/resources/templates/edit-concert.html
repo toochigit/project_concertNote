@@ -1,28 +1,85 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Modifier le concert</title>
-  <meta charset="UTF-8">
+<head th:replace="fragments :: head('Modifier un concert')">
 </head>
 <body>
-<h1>Modifier le concert</h1>
+<nav th:replace="fragments :: navbar"></nav>
 
-<form th:action="@{/concerts/edit/{id}(id=${concertId})}" th:object="${concertDto}" method="post">
-  <label for="band">Nom du groupe :</label><br>
-  <input type="text" id="band" th:field="*{band}"><br>
-  <p th:if="${#fields.hasErrors('band')}" th:errors="*{band}" style="color:red;"></p><br>
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a th:href="@{/concerts}">Concerts</a></li>
+      <li class="breadcrumb-item"><a th:href="@{/concerts/{id}(id=${concert.id})}">Détails</a></li>
+      <li class="breadcrumb-item active">Modifier</li>
+    </ol>
+  </nav>
 
-  <label for="venue">Lieu :</label><br>
-  <input type="text" id="venue" th:field="*{venue}"><br>
-  <p th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}" style="color:red;"></p><br>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+          <h1 class="h3 mb-0">
+            <i class="fas fa-edit me-2"></i>Modifier le concert
+          </h1>
+        </div>
 
-  <label for="date">Date :</label><br>
-  <input type="date" id="date" th:field="*{date}"><br>
-  <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}" style="color:red;"></p><br>
+        <div class="card-body p-4">
+          <!-- Message d'erreur -->
+          <div class="alert alert-danger" th:if="${error}">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${error}">Erreur</span>
+          </div>
 
-  <button type="submit">Modifier</button>
-</form>
+          <form th:action="@{/concerts/edit/{id}(id=${concert.id})}" method="post" th:object="${concert}">
+            <input type="hidden" th:field="*{id}">
 
-<p><a th:href="@{/concerts/{id}(id=${concertId})}">← Annuler</a></p>
+            <div class="mb-3">
+              <label for="band" class="form-label">Groupe / Artiste <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-music"></i></span>
+                <input type="text" class="form-control" id="band" th:field="*{band}"
+                       placeholder="Nom du groupe ou de l'artiste" required>
+              </div>
+              <div class="form-text text-danger" th:if="${#fields.hasErrors('band')}"
+                   th:errors="*{band}">Erreur nom du groupe</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="venue" class="form-label">Lieu <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                <input type="text" class="form-control" id="venue" th:field="*{venue}"
+                       placeholder="Lieu du concert" required>
+              </div>
+              <div class="form-text text-danger" th:if="${#fields.hasErrors('venue')}"
+                   th:errors="*{venue}">Erreur lieu</div>
+            </div>
+
+            <div class="mb-4">
+              <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                <input type="date" class="form-control" id="date" th:field="*{date}" required>
+              </div>
+              <div class="form-text text-danger" th:if="${#fields.hasErrors('date')}"
+                   th:errors="*{date}">Erreur date</div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <a th:href="@{/concerts/{id}(id=${concert.id})}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Annuler
+              </a>
+              <button type="submit" class="btn btn-warning">
+                <i class="fas fa-save me-2"></i>Mettre à jour
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="fragments :: footer"></footer>
 </body>
 </html>

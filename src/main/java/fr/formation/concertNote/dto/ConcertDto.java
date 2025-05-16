@@ -16,7 +16,6 @@ public class ConcertDto {
     private String venue;
 
     @NotNull(message = "La date est obligatoire")
-    @FutureOrPresent(message = "La date ne peut pas être dans le passé")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 

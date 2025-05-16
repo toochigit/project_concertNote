@@ -1,30 +1,133 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Noter le concert</title>
-    <meta charset="UTF-8">
+<head th:replace="fragments :: head('Noter un concert')">
+    <!-- Style supplémentaire pour les étoiles de notation -->
+    <style>
+        .rating-stars input[type="radio"] {
+            display: none;
+        }
+        .rating-stars label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label,
+        .rating-stars input[type="radio"]:checked ~ label {
+            color: #ffc107;
+        }
+    </style>
 </head>
 <body>
-<h1>Noter le concert</h1>
+<nav th:replace="fragments :: navbar"></nav>
 
-<p>
-    Concert :
-    <strong th:text="${concert.band}">Nom du groupe</strong> –
-    <span th:text="${concert.venue}">Lieu</span>,
-    le <span th:text="${concert.date}">Date</span>
-</p>
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/concerts}">Concerts</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/concerts/{id}(id=${concert.id})}">Détails</a></li>
+            <li class="breadcrumb-item active">Noter</li>
+        </ol>
+    </nav>
 
-<form th:action="@{/ratings/add/{id}(id=${concert.id})}" th:object="${ratingDto}" method="post">
-    <label for="score">Note (1 à 5) :</label><br>
-    <input type="number" id="score" min="1" max="5" th:field="*{score}"><br>
-    <p th:if="${#fields.hasErrors('score')}" th:errors="*{score}" style="color:red;"></p><br>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-star me-2"></i>Noter le concert
+                    </h1>
+                </div>
 
-    <label for="comment">Commentaire (facultatif) :</label><br>
-    <textarea id="comment" th:field="*{comment}" rows="4" cols="50"></textarea><br><br>
+                <div class="card-body p-4">
+                    <!-- Informations du concert -->
+                    <div class="alert alert-secondary mb-4">
+                        <h5 th:text="${concert.band}">Nom du groupe</h5>
+                        <p class="mb-0">
+                            <i class="fas fa-map-marker-alt me-2"></i><span th:text="${concert.venue}">Lieu</span><br>
+                            <i class="fas fa-calendar-alt me-2"></i><span th:text="${#temporals.format(concert.date, 'dd/MM/yyyy')}">Date</span>
+                        </p>
+                    </div>
 
-    <button type="submit">Envoyer</button>
-</form>
+                    <!-- Formulaire de notation -->
+                    <form th:action="@{/ratings/add/{id}(id=${concert.id})}" method="post" th:object="${rating}">
+                        <div class="mb-4 text-center">
+                            <label class="form-label d-block">Votre note <span class="text-danger">*</span></label>
+                            <div class="rating-stars d-flex justify-content-center mb-2">
+                                <input type="radio" id="star5" name="score" value="5" th:field="*{score}">
+                                <label for="star5" class="me-1"><i class="fas fa-star"></i></label>
 
-<p><a th:href="@{/concerts/{id}(id=${concert.id})}">← Retour au concert</a></p>
+                                <input type="radio" id="star4" name="score" value="4" th:field="*{score}">
+                                <label for="star4" class="me-1"><i class="fas fa-star"></i></label>
+
+                                <input type="radio" id="star3" name="score" value="3" th:field="*{score}">
+                                <label for="star3" class="me-1"><i class="fas fa-star"></i></label>
+
+                                <input type="radio" id="star2" name="score" value="2" th:field="*{score}">
+                                <label for="star2" class="me-1"><i class="fas fa-star"></i></label>
+
+                                <input type="radio" id="star1" name="score" value="1" th:field="*{score}">
+                                <label for="star1"><i class="fas fa-star"></i></label>
+                            </div>
+                            <div class="form-text text-danger" th:if="${#fields.hasErrors('score')}"
+                                 th:errors="*{score}">Erreur de notation</div>
+                            <div class="text-center">
+                                <span id="rating-text" class="badge bg-secondary">Sélectionnez une note</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="comment" class="form-label">Commentaire (optionnel)</label>
+                            <textarea class="form-control" id="comment" th:field="*{comment}"
+                                      rows="4" placeholder="Partagez votre expérience du concert..."></textarea>
+                            <div class="form-text text-danger" th:if="${#fields.hasErrors('comment')}"
+                                 th:errors="*{comment}">Erreur de commentaire</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/concerts/{id}(id=${concert.id})}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Annuler
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-paper-plane me-2"></i>Envoyer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments :: footer"></footer>
+
+<!-- Script pour mettre à jour le texte de la note -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ratingInputs = document.querySelectorAll('input[name="score"]');
+        const ratingText = document.getElementById('rating-text');
+        const ratingLabels = {
+            '1': 'Très déçu',
+            '2': 'Décevant',
+            '3': 'Correct',
+            '4': 'Très bon',
+            '5': 'Exceptionnel'
+        };
+
+        ratingInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                ratingText.textContent = ratingLabels[this.value];
+                ratingText.className = 'badge bg-' + (this.value >= 4 ? 'success' : (this.value >= 3 ? 'primary' : (this.value >= 2 ? 'warning' : 'danger')));
+            });
+
+            // Initialiser avec la valeur sélectionnée
+            if (input.checked) {
+                ratingText.textContent = ratingLabels[input.value];
+                ratingText.className = 'badge bg-' + (input.value >= 4 ? 'success' : (input.value >= 3 ? 'primary' : (input.value >= 2 ? 'warning' : 'danger')));
+            }
+        });
+    });
+</script>
 </body>
 </html>

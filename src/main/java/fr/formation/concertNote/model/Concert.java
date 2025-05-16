@@ -68,5 +68,15 @@ public class Concert {
     }
 
     public Concert() {}
+
+    public Double getAvgRating() {
+        if (ratings == null || ratings.isEmpty()) {
+            return null;
+        }
+        return ratings.stream()
+                .mapToDouble(Rating::getScore)
+                .average()
+                .orElse(0.0);
+    }
 }
 
