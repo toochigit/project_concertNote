@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.OptionalDouble;
 
 @Service
 public class RatingService {
@@ -25,6 +26,13 @@ public class RatingService {
 
     public boolean hasUserAlreadyRated(User user, Concert concert) {
         return ratingRepository.existsByUserAndConcert(user, concert);
+    }
+
+    public OptionalDouble getAverageRatingForConcert(Concert concert) {
+        List<Rating> ratings = ratingRepository.findByConcert(concert);
+        return ratings.stream()
+                .mapToInt(Rating::getScore)
+                .average();
     }
 
 }

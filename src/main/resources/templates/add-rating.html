@@ -14,12 +14,13 @@
     le <span th:text="${concert.date}">Date</span>
 </p>
 
-<form th:action="@{/ratings/add/{id}(id=${concert.id})}" th:object="${rating}" method="post">
+<form th:action="@{/ratings/add/{id}(id=${concert.id})}" th:object="${ratingDto}" method="post">
     <label for="score">Note (1 à 5) :</label><br>
-    <input type="number" min="1" max="5" th:field="*{score}" required><br><br>
+    <input type="number" id="score" min="1" max="5" th:field="*{score}"><br>
+    <p th:if="${#fields.hasErrors('score')}" th:errors="*{score}" style="color:red;"></p><br>
 
     <label for="comment">Commentaire (facultatif) :</label><br>
-    <textarea th:field="*{comment}" rows="4" cols="50"></textarea><br><br>
+    <textarea id="comment" th:field="*{comment}" rows="4" cols="50"></textarea><br><br>
 
     <button type="submit">Envoyer</button>
 </form>

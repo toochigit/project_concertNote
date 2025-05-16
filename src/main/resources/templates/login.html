@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Connexion</title>
+    <title>Connexion - ConcertNote</title>
     <meta charset="UTF-8">
 </head>
 <body>
 <h1>Connexion</h1>
 
-<form th:action="@{/login}" method="post">
-    <label for="username">Nom d'utilisateur :</label><br>
-    <input type="text" id="username" name="username" required><br><br>
+<form th:action="@{/login}" th:object="${loginDto}" method="post">
+    <label>Nom d'utilisateur :</label><br>
+    <input type="text" th:field="*{username}"><br>
+    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;"></p><br>
 
-    <label for="password">Mot de passe :</label><br>
-    <input type="password" id="password" name="password" required><br><br>
+    <label>Mot de passe :</label><br>
+    <input type="password" th:field="*{password}"><br>
+    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></p><br>
 
     <button type="submit">Se connecter</button>
 </form>
 
-<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+<p th:if="${error}" th:text="${error}" style="color:red;"></p>
 
 <p>Pas encore inscrit ? <a th:href="@{/register}">Créer un compte</a></p>
 </body>

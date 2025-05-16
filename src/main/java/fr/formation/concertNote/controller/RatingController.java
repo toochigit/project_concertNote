@@ -1,5 +1,8 @@
 package fr.formation.concertNote.controller;
 
+import fr.formation.concertNote.dto.RatingDto;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 import fr.formation.concertNote.model.Concert;
 import fr.formation.concertNote.model.Rating;
 import fr.formation.concertNote.model.User;
@@ -41,14 +44,17 @@ public class RatingController {
         }
 
         model.addAttribute("concert", concert);
-        model.addAttribute("rating", new Rating());
+        model.addAttribute("ratingDto", new RatingDto());
         return "add-rating";
     }
 
     @PostMapping("/add/{concertId}")
     public String submitRating(@PathVariable Long concertId,
-                               @ModelAttribute Rating rating,
-                               HttpSession session) {
+                               @Valid @ModelAttribute("ratingDto") RatingDto dto,
+                               BindingResult result,
+                               HttpSession session,
+                               Model model)
+    {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
@@ -59,8 +65,17 @@ public class RatingController {
             return "redirect:/concerts";
         }
 
-        rating.setConcert(concert);
+        if (result.hasErrors()) {
+            model.addAttribute("concert", concert);
+            return "add-rating";
+        }
+
+        Rating rating = new Rating();
         rating.setUser(user);
+        rating.setConcert(concert);
+        rating.setScore(dto.getScore());
+        rating.setComment(dto.getComment());
+
         ratingService.saveRating(rating);
 
         return "redirect:/concerts/" + concertId;

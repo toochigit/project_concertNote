@@ -20,6 +20,16 @@
 
 <hr>
 
+<div th:if="${averageRating.present}">
+  <p><strong>Note moyenne :</strong>
+    <span th:text="${#numbers.formatDecimal(averageRating.asDouble, 1, 1)}">4.2</span> / 5
+  </p>
+</div>
+<div th:unless="${averageRating.present}">
+  <p><em>Aucune note pour l’instant.</em></p>
+</div>
+
+
 <h2>Notes et commentaires</h2>
 
 <div th:if="${concert.ratings.size() > 0}">

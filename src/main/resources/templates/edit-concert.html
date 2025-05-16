@@ -7,19 +7,22 @@
 <body>
 <h1>Modifier le concert</h1>
 
-<form th:action="@{/concerts/edit/{id}(id=${concert.id})}" th:object="${concert}" method="post">
+<form th:action="@{/concerts/edit/{id}(id=${concertId})}" th:object="${concertDto}" method="post">
   <label for="band">Nom du groupe :</label><br>
-  <input type="text" id="band" th:field="*{band}" required><br><br>
+  <input type="text" id="band" th:field="*{band}"><br>
+  <p th:if="${#fields.hasErrors('band')}" th:errors="*{band}" style="color:red;"></p><br>
 
   <label for="venue">Lieu :</label><br>
-  <input type="text" id="venue" th:field="*{venue}" required><br><br>
+  <input type="text" id="venue" th:field="*{venue}"><br>
+  <p th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}" style="color:red;"></p><br>
 
   <label for="date">Date :</label><br>
-  <input type="date" id="date" th:field="*{date}" required><br><br>
+  <input type="date" id="date" th:field="*{date}"><br>
+  <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}" style="color:red;"></p><br>
 
   <button type="submit">Modifier</button>
 </form>
 
-<p><a th:href="@{/concerts/{id}(id=${concert.id})}">← Annuler</a></p>
+<p><a th:href="@{/concerts/{id}(id=${concertId})}">← Annuler</a></p>
 </body>
 </html>

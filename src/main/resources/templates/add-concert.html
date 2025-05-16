@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Ajouter un concert</title>
     <meta charset="UTF-8">
@@ -7,15 +7,19 @@
 <body>
 <h1>Ajouter un concert</h1>
 
-<form th:action="@{/concerts/add}" th:object="${concert}" method="post">
+<form th:action="@{/concerts/add}" th:object="${concertDto}" method="post">
+
     <label for="band">Nom du groupe :</label><br>
-    <input type="text" id="band" th:field="*{band}" required><br><br>
+    <input type="text" id="band" th:field="*{band}"><br>
+    <p th:if="${#fields.hasErrors('band')}" th:errors="*{band}" style="color:red;"></p><br>
 
     <label for="venue">Lieu :</label><br>
-    <input type="text" id="venue" th:field="*{venue}" required><br><br>
+    <input type="text" id="venue" th:field="*{venue}"><br>
+    <p th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}" style="color:red;"></p><br>
 
     <label for="date">Date :</label><br>
-    <input type="date" id="date" th:field="*{date}" required><br><br>
+    <input type="date" id="date" th:field="*{date}"><br>
+    <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}" style="color:red;"></p><br>
 
     <button type="submit">Ajouter</button>
 </form>

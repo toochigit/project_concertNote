@@ -1,10 +1,9 @@
 package fr.formation.concertNote.controller;
 
+import fr.formation.concertNote.dto.LoginDto;
 import fr.formation.concertNote.dto.UserDto;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
-
-
 import fr.formation.concertNote.model.User;
 import fr.formation.concertNote.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -39,16 +38,21 @@ public class AuthController {
 
 
     @GetMapping("/login")
-        public String showLoginForm() {
-            return "login";
+    public String showLoginForm(Model model) {
+        model.addAttribute("loginDto", new LoginDto());
+        return "login";
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username,
-                        @RequestParam String password,
+    public String login(@Valid @ModelAttribute("loginDto") LoginDto dto,
+                        BindingResult result,
                         HttpSession session,
                         Model model) {
-        var user = userService.authenticate(username, password);
+        if (result.hasErrors()) {
+            return "login";
+        }
+
+        var user = userService.authenticate(dto.getUsername(), dto.getPassword());
         if (user.isPresent()) {
             session.setAttribute("user", user.get());
             return "redirect:/concerts";
@@ -57,6 +61,7 @@ public class AuthController {
             return "login";
         }
     }
+
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
